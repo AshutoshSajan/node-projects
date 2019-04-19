@@ -63,16 +63,13 @@ http.createServer((req, res) => {
 		}).on('end', () => {
 			var parsedContact = querystring.parse(contact);
 			res.end(JSON.stringify(parsedContact));
-			console.log(parsedContact);
 			var fileName = `${parsedContact.email}.json`;
 
 			// addFile(userInfoPath, fileName, parsedContact)
 			var user = JSON.stringify(parsedContact);
-			fs.open(userInfoPath + "/" + fileName, "wx", (err, fileDescriptor) => {
-				console.log(userInfoPath, filename)
+			fs.open(`${userInfoPath}/${fileName}`, "wx", (err, fileDescriptor) => {
 				if(err) console.log(err);
 				fs.writeFile(fileDescriptor, user, (err) => {
-					console.log(user, "obj in writeFile");
 					if(err) console.log(err)
 					console.log("success")
 					fs.close(fileDescriptor, (err) => {
