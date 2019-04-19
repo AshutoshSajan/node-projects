@@ -2,23 +2,39 @@ var readline = require('readline');
 var events = require('events');
 var e = new events.EventEmitter();
 var os = require ("os");
+var fs = require("fs");
+var path = require("path");
+const chalk = require('chalk');
+
+var userPath = path.join(__dirname, "../users");
+// console.log(userPath, "path");
+
+// fs.readFile(userPath, (err, data) => {
+// 	if(err) console.log(err);
+// 	console.log(data, "in read File");
+// })
+
+var userData = "";
+// ====================================================
+// function to read folder and files inside it 
+// ====================================================
+
+
+// fetchUserInfo()
 
 var cli = {};
 var width = process.stdout.columns
 
-console.log("os.cpus()", os.uptime(), os.tmpdir(), os.freemem);
-
 // padding function
-var padding = (char) => {
+var padding = (char, width) => {
 	var space = "";
-	var margin =  50 - char.length;
-	for(var i = 0; i < margin; i++){
+	var mid = width / 2
+	var margin =  Math.floor(mid) - char.length;
+	for(var i = 0; i < (margin-20); i++){
 		space += " ";
 	}
 	return space;
 }
-
-// padding("hello", width);
 
 // verticle line unction
 var verticleLine = (val) => {
@@ -37,33 +53,16 @@ var hrLine = (width = 0) => {
 }
 
 // centring an text
-var center = (width=0, char="") => {
-	newchar = char;
+var center = (width=0, char) => {
+	var newchar = " ";
 	var newWidth = width - char.length;
 	var mid = Math.floor(newWidth / 2);
-	for(var i = 0; i <= mid; i++){
-		newchar = " " + newchar;
+	for(var i = 0; i <= mid+10; i++){
+		newchar += " ";
 	}
+	newchar += char;
 	console.log(newchar)
-	return "";
-}
-
-// manual function
-var showMan = () => {
-	hrLine(width);
-	verticleLine(2)
-	console.log(center(width, "Use man command name for more info"));
-	verticleLine(1)
-	hrLine(width);
-
-	for (var key in help){
-		var space = padding(key);
-		verticleLine(2);
-		console.log(key, space, help[key]);
-		verticleLine(2);
-	}
-	hrLine(width);
-	return "";
+	return " ";
 }
 
 // ===================================================
@@ -82,12 +81,10 @@ var help = {
 // event listeners
 // ===================================================
 e.on("exit", (val) => {
-	console.log(val, "in exit event listener")
 	process.exit(0)
 })
 
 e.on("man", (val) => {
-	console.log(val, help, "in man event listener")
 	showMan();
 })
 
@@ -97,18 +94,15 @@ e.on("help", (val) => {
 })
 
 e.on("date", (val) => {
-	console.log(new Date, val, "in date event listener")
 	showDate()
 })
 
 e.on("stats", (val) => {
-	// console.log(val, "in stats event listener")
 	showStats()
-	os.cpus()
 })
 
 e.on("list-users", (val) => {
-	console.log("in list-users event listener")
+	fetchUserInfo();
 })
 
 // ===================================================
@@ -154,31 +148,99 @@ var showDate = () => {
 	var timeZone = new Date().toTimeString().split(" ").splice(1, 1);
 	hrLine(width);
 	verticleLine(2)
-	console.log(center(width, "Current Date"));
+	console.log(center(width, chalk.red.bold("Current Date")));
 	verticleLine(2)
 	hrLine(width);
 	verticleLine(2)
-	console.log(`date : ${padding("date")} ${date}`);
+	console.log(`  ${chalk.blue('date :')} ${chalk.green(padding("date", width))} ${chalk.green(date)}`);
 	verticleLine(2)
-	console.log(`time : ${padding("time")} ${time}`);
+	console.log(`  ${chalk.blue('time :')} ${chalk.green(padding("time", width))} ${chalk.green(time)}`);
 	verticleLine(2)
-	console.log(`timezone : ${padding("timezone")} ${timeZone}`);
+	console.log(`  ${chalk.blue('timezone :')} ${chalk.green(padding("timezone", width))} ${chalk.green(timeZone)}`);
 	verticleLine(2);
 }
 
 var showStats = () => {
-	// padding(date);
+	hrLine(width);
+	verticleLine(2);
+	console.log(center(width, chalk.cyan.bold("Your system status is")));
+	verticleLine(2);
+	hrLine(width);
+	verticleLine(2);
+	console.log(`  ${chalk.blue("CPU's :")} ${chalk.green(padding("CPU's", width))} ${chalk.green(os.cpus()[0].model)}`);
+	verticleLine(2);
+	console.log(`  ${chalk.blue("CPU's :")} ${chalk.green(padding("CPU's", width))} ${chalk.green(os.cpus()[0].speed)}`);
+	verticleLine(2);
+	console.log(`  ${chalk.blue("Free Memory :")} ${chalk.green(padding("Free Memory", width))} ${chalk.green(os.freemem())}`);
+	verticleLine(2);
+	console.log(`  ${chalk.blue("Total Memory :")} ${chalk.green(padding("Total Memory", width))} ${chalk.green(os.totalmem())}`);
+	verticleLine(2);
+	console.log(`  ${chalk.blue("Uptime :")} ${chalk.green(padding("Uptime", width))} ${chalk.green(os.uptime())}`);
+	verticleLine(2);
+}
+
+// show manual function
+var showMan = () => {
 	hrLine(width);
 	verticleLine(2)
-	console.log(center(width, "Your system status is"));
-	verticleLine(2)
+	console.log(center(width, chalk.red.bold("Use man command name for more info")));
+	verticleLine(1)
 	hrLine(width);
 
+	for (var key in help){
+		var space = padding(key, width);
+		verticleLine(2);
+		console.log(`  ${chalk.blue(key)} ${chalk.blue(":")} ${space} ${chalk.green(help[key])}`);
+		verticleLine(2);
+	}
+	hrLine(width);
+	return "";
+}
+
+
+var showUser = (obj) => {
+	hrLine(width);
 	verticleLine(2)
-	console.log(`cpus : ${padding("cpus")} ${"sadssdfsd"}`);
+	console.log(center(width, chalk.darkred.bold("All users")));
+	verticleLine(1)
+	hrLine(width);
+
+	for (var key in obj){
+		var space = padding(key, width);
+		verticleLine(2);
+		console.log(`  ${chalk.blue(key)}, : ${space}, ${chalk.orange(obj[key])}`);
+		verticleLine(2);
+	}
+	hrLine(width);
+	return "";
+}
+
+
+var fetchUserInfo = () => {
+	var space = padding("Name", width);
+
+	// user info header
+	hrLine(width);
 	verticleLine(2)
-	console.log(`free memory : ${padding("free memory")} ${"dsfsdfsdfsd"}`);
+	console.log(center(width, chalk.red.bold("User info")));
 	verticleLine(2)
 
-	// var  = new Date().toTimeString().split(" ").splice(1, 1)
+	fs.readdir(userPath, (err, files) => {
+	  files.forEach(file => {
+	    var line = "";
+	    var filePath = path.join(userPath,file);
+	    fs.readFile(filePath, (err, data) => {
+	    	if (err) console.log("error found in reading file");
+
+	    	// always parse the file date because fs will always return string
+	   		var user = JSON.parse(data);
+	    	line += `  ${chalk.darkred('Name:')}  ${space} ${chalk.dodgerblue(user.name)} age: ${chalk.green(user.age)} email: ${chalk.tomato(user.email)} country: ${chalk.cyan(user.country)}`;
+
+	    	hrLine(width);
+				verticleLine(2)
+	    	console.log(line);
+	    	verticleLine(2)
+	    })
+	  });
+	});
 }
