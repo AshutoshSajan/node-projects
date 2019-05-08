@@ -1,0 +1,73 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+body {
+	margin: 0;
+	padding: 0;
+}
+.header {
+	background: #111;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+.header nav ul {
+	display: flex;
+	justify-content: space-between;
+}
+
+ul li {
+	list-style: none;
+	font-size: 30px;
+}
+a {
+  color: #00B7FF;
+  text-decoration: none;
+}
+form {
+	margin: 0 auto;
+	width: 500px
+}
+form .input {
+	display: block;
+	width: 100%;
+	font-size: 20px;
+	margin: 3px 0;
+}
+
+form div {
+	display: flex;
+	justify-content: space-between;
+}
+
+.login-card {
+	margin: 0 auto;
+	width: 300px;
+}
+
+.card button {
+	font-size: 20px;
+	color: darkred;
+}
+.fab {
+	color: #111;
+	font-size: 20px;
+}
+
+.card {
+	display: flex;
+	margin: 5px 0;
+	justify-content: space-around;
+	align-items: center;
+	border-radius: 5px;
+	border: 0.5px solid #999;
+	padding: 0 15px;
+}
+.form input {
+	display: block;
+	width: 100%;
+	font-size: 20px;
+	margin: 4px 0;
+	padding: 4px 8px;
+	box-sizing: border-box;
+}

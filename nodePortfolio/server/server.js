@@ -48,11 +48,10 @@ http.createServer((req, res) => {
 		fs.createReadStream(filePath).pipe(res);
 	}
 	if(["jpg", "png", "gif", "jpeg"].indexOf(req.url.split(".").pop()) > -1) {
-		var extension = req.url.split(".").pop()
+		var extension = req.url.split(".").pop();
 		var filePath = dirPath + req.url;
 		res.setHeader('Content-Type', `image/${extension}`);
 		fs.createReadStream(filePath).pipe(res);
-
 	}
 
 	// post method to collect userinfo from a form

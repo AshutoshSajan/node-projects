@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  </head>
+  <body>
+  	<% include partials/header %>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+    <div class="login-card">
+    	<a href="/auth/google" class="card">
+    		<i class="fab fa-google"></i>
+	    	<h3>login with google</h3>
+    	</a>
+			<a href="/auth/github" class="card">
+				<i class="fab fa-github"></i>
+				<h3>Login with github</h3>
+			</a>
+    </div>
+  </body>
+</html>
